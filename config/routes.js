@@ -42,8 +42,10 @@ function register(req, res) {
     .first()
     .then(user => {
       const token = generateToken(user)
-    })
-  })
+      res.status(201).json({id: user.id, token})
+    }).catch(err => res.stats(500).send(err))
+
+  }).catch(err => res.staus(500).json(err))
 }
 
 function login(req, res) {
