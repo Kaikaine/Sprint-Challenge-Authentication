@@ -50,6 +50,20 @@ function register(req, res) {
 
 function login(req, res) {
   // implement user login
+  const creds = req.body
+  
+  db('users')
+  .where({username: creds.username})
+  .first()
+  .then(user => {
+    if (user || bcrypt.compareSync(creds.password, user.password)) {
+      const token = generateToken(user)
+      return res.status(200).json(`${name}, ${token}`)
+    } else {
+      return res.status(401).json({error: 'Error'})
+    }
+
+  }).catch(err => res.status(500).json(err))
 }
 
 function getJokes(req, res) {
