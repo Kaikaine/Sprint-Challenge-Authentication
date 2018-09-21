@@ -8,6 +8,22 @@ module.exports = server => {
   server.get('/api/jokes', authenticate, getJokes);
 };
 
+const secret = 'Yonce'
+
+function generateToken(user) {
+  const payload = {
+    username: user.username
+  }
+
+  const options = {
+    expiresIn: '1h',
+    jwtid: '54321'
+  }
+
+  const token = jwt.sign(payload, secret, options)
+  return token
+}
+
 function register(req, res) {
   // implement user registration
   const creds = req.body
