@@ -1,6 +1,14 @@
 const axios = require('axios');
+const bcrypt = require('bcryptjs');
+const knex = require('knex')
+const express = require('express');
+const dbConfig = require('../knexfile')
+const db = knex(dbConfig.development);
+const server = express();
+const jwt = require('jsonwebtoken')
 
 const { authenticate } = require('./middlewares');
+server.use(express.json());
 
 module.exports = server => {
   server.post('/api/register', register);
@@ -58,9 +66,9 @@ function login(req, res) {
   .then(user => {
     if (user || bcrypt.compareSync(creds.password, user.password)) {
       const token = generateToken(user)
-      return res.status(200).json(`${name}, ${token}`)
+       res.status(200).json(`${name}, ${token}`)
     } else {
-      return res.status(401).json({error: 'Error'})
+       res.status(401).json({error: 'Error'})
     }
 
   }).catch(err => res.status(500).json(err))
